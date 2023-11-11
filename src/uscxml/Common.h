@@ -19,8 +19,8 @@
 
 #ifndef COMMON_H_YZ3CIYP
 #define COMMON_H_YZ3CIYP
-
-#define XERCESC_NS xercesc_3_1
+#include <functional>
+#define XERCESC_NS xercesc_3_2
 
 #ifndef _MSC_VER
 #define ELPP_STACKTRACE_ON_CRASH 1

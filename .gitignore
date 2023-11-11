@@ -21,5 +21,6 @@ package/windows*
 /test/w3c/graphs/
 
 /.idea/*
-
+/vs2022/
+/build/
 /test/bindings/java/logs/

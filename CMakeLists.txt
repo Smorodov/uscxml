@@ -1,5 +1,5 @@
 # travis build slaves ony feature 2.8.7 - let's hope it's sufficient
-cmake_minimum_required(VERSION 2.8.7 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.27 FATAL_ERROR)
 
 # build type has to be set before the project definition
 SET(BUILD_TYPE_HELP "Choose the type of build, options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug, Release, RelWithDebInfo, MinSizeRel.")
@@ -12,7 +12,32 @@ ENDIF()
 # swig_add_module complains quite verbosly on newer cmake versions
 SET(CMAKE_WARN_DEPRECATED OFF)
 
+include(FetchContent)
+FetchContent_Declare(
+XercesC
+GIT_REPOSITORY https://github.com/apache/xerces-c
+GIT_TAG       xerces-3.2.2
+OVERRIDE_FIND_PACKAGE
+)
+FetchContent_MakeAvailable(XercesC)
+
+#set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+
 PROJECT(uSCXML)
+include_directories(${CMAKE_BINARY_DIR})
+
+set(XercesC_INCLUDE_DIRS 
+${xercesc_SOURCE_DIR}/src
+${xercesc_BINARY_DIR}/src
+)
+
+message("LINL DIRECTORIES: "${xercesc_BINARY_DIR})
+
+link_directories( 
+	${xercesc_BINARY_DIR}/src/Debug
+	${xercesc_BINARY_DIR}/src/Release
+)
+set(XercesC_LIBRARIES debug xerces-c_3D optimized xerces-c_3)
 
 #################################################
 # General Setup
@@ -291,7 +316,7 @@ endif()
 if (XercesC_FOUND)
 	include_directories(${XercesC_INCLUDE_DIRS})
 	list (APPEND USCXML_CORE_LIBS ${XercesC_LIBRARIES})
-	set(XERCESC_NS "xercesc_3_1")
+	set(XERCESC_NS "xercesc_3_2")
 else()
 	message(STATUS "--> will download and compile")
 	include("${CMAKE_BUILD_SCRIPTS}/BuildXercesC.cmake")
@@ -501,7 +526,7 @@ if (BUILD_AS_PLUGINS)
 	list (APPEND USCXML_FILES ${USCXML_PLUGINS})
 	
 	add_library(uscxml ${USCXML_FILES})
-	target_link_libraries(uscxml ${USCXML_CORE_LIBS})
+	target_link_libraries(uscxml ${USCXML_CORE_LIBS} )
 	set_target_properties(uscxml PROPERTIES COMPILE_FLAGS "-DUSCXML_EXPORT")
 #	set_target_properties(uscxml PROPERTIES COMPILE_FLAGS "-DPLUMA_EXPORTS")
 	add_definitions(-DPLUMA_EXPORTS)

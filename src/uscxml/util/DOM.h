@@ -51,7 +51,7 @@ public:
 	static bool isMember(const XERCESC_NS::DOMNode* node, const std::list<XERCESC_NS::DOMNode*>& list);
 	static bool isMember(const XERCESC_NS::DOMNode* node, const XERCESC_NS::DOMNodeList* list);
 
-	static std::string xPathForNode(const XERCESC_NS::DOMNode* node, const std::string& ns = "");
+	static std::string xPathForNode(const XERCESC_NS::DOMNode* node, const std::string& ns = "");	
 	static std::string idForNode(const XERCESC_NS::DOMNode* node);
 
 	static std::list<XERCESC_NS::DOMElement*> inPostFixOrder(const std::set<std::string>& elements,
@@ -164,7 +164,7 @@ public :
 		// this is most unfortunate but needed with static XMLChars :(
 		if (!_xercesIsInit) {
 			try {
-				::xercesc_3_1::XMLPlatformUtils::Initialize();
+				::xercesc_3_2::XMLPlatformUtils::Initialize();
 				_xercesIsInit = true;
 			} catch (const XERCESC_NS::XMLException& toCatch) {
 				throw ("Cannot initialize XercesC: " + X(toCatch.getMessage()).str());
