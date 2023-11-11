@@ -137,6 +137,11 @@ int main(int argc, char** argv) {
 		}
 	}
 
+//	inputFile = "file:///Z:/Projects2022/uscxml/vs2022/bin/Debug/1.scxml";
+//	outputFile = "1.c";
+//	outType = "c";
+
+
 	// make sure given annotation options are available in the environment
 	if(ANNOTATE("USCXML_ANNOTATE_GLOBAL_STATE_STEP", "step"))
 		setenv("USCXML_ANNOTATE_GLOBAL_STATE_STEP", "YES", 1);

@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.27 FATAL_ERROR)
 
 # build type has to be set before the project definition
 SET(BUILD_TYPE_HELP "Choose the type of build, options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug, Release, RelWithDebInfo, MinSizeRel.")
+
 IF(DEFINED CMAKE_BUILD_TYPE)
    SET(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING ${BUILD_TYPE_HELP})
 ELSE()
@@ -11,7 +12,9 @@ ENDIF()
 
 # swig_add_module complains quite verbosly on newer cmake versions
 SET(CMAKE_WARN_DEPRECATED OFF)
-
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+#set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+set(BUILD_SHARED_LIBS OFF)
 include(FetchContent)
 FetchContent_Declare(
 XercesC
@@ -21,9 +24,18 @@ OVERRIDE_FIND_PACKAGE
 )
 FetchContent_MakeAvailable(XercesC)
 
-#set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+# --------------
+FetchContent_Declare(
+libevent
+GIT_REPOSITORY https://github.com/libevent/libevent
+GIT_TAG       master
+OVERRIDE_FIND_PACKAGE
+)
+FetchContent_MakeAvailable(libevent)
 
 PROJECT(uSCXML)
+# set(BUILD_SHARED_LIBS ON)
+
 include_directories(${CMAKE_BINARY_DIR})
 
 set(XercesC_INCLUDE_DIRS 
@@ -31,7 +43,11 @@ ${xercesc_SOURCE_DIR}/src
 ${xercesc_BINARY_DIR}/src
 )
 
-message("LINL DIRECTORIES: "${xercesc_BINARY_DIR})
+set(libevent_INCLUDE_DIRS 
+${libevent_SOURCE_DIR}/include
+)
+
+
 
 link_directories( 
 	${xercesc_BINARY_DIR}/src/Debug

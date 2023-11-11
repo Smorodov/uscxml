@@ -30,6 +30,10 @@ extern "C" {
 #include <chrono>
 #include <ctime>
 
+#ifndef WITH_IOPROC_HTTP_TIMEOUT;
+#define WITH_IOPROC_HTTP_TIMEOUT 1000
+#endif
+
 // why is it duplicated from Common.h here?
 
 #if defined(_WIN32) && !defined(USCXML_STATIC)
