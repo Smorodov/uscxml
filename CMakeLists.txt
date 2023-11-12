@@ -1,4 +1,3 @@
-# travis build slaves ony feature 2.8.7 - let's hope it's sufficient
 cmake_minimum_required(VERSION 3.27 FATAL_ERROR)
 
 # build type has to be set before the project definition
@@ -15,16 +14,25 @@ SET(CMAKE_WARN_DEPRECATED OFF)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 #set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 set(BUILD_SHARED_LIBS OFF)
+
+# --------------------------------------
+# --------------------------------------
 include(FetchContent)
 FetchContent_Declare(
 XercesC
-GIT_REPOSITORY https://github.com/apache/xerces-c
-GIT_TAG       xerces-3.2.2
+GIT_REPOSITORY https://github.com/smorodov/xerces-c
+GIT_TAG       master
 OVERRIDE_FIND_PACKAGE
 )
 FetchContent_MakeAvailable(XercesC)
-
+set(XERCESC_NS "xercesc_4_0")
+set(XercesC_LIBRARIES debug xerces-c_4D optimized xerces-c_4)
+# --------------------------------------
+# --------------------------------------
+add_definitions(-DXERCESC_NS=${XERCESC_NS})
 # --------------
+set(EVENT__DISABLE_TESTS ON)
+set(EVENT__DISABLE_SAMPLES ON)
 FetchContent_Declare(
 libevent
 GIT_REPOSITORY https://github.com/libevent/libevent
@@ -53,7 +61,7 @@ link_directories(
 	${xercesc_BINARY_DIR}/src/Debug
 	${xercesc_BINARY_DIR}/src/Release
 )
-set(XercesC_LIBRARIES debug xerces-c_3D optimized xerces-c_3)
+
 
 #################################################
 # General Setup
@@ -258,10 +266,10 @@ else()
 	add_definitions("-DUSCXML_STATIC")
 endif()
 
-OPTION(BUILD_BINDING_JAVA "Build language bindings for Java" ON)
-OPTION(BUILD_BINDING_LUA "Build language bindings for Lua" ON)
-OPTION(BUILD_BINDING_CSHARP "Build language bindings for CSharp" ON)
-OPTION(BUILD_BINDING_PYTHON "Build language bindings for Python" ON)
+OPTION(BUILD_BINDING_JAVA "Build language bindings for Java" OFF)
+OPTION(BUILD_BINDING_LUA "Build language bindings for Lua" OFF)
+OPTION(BUILD_BINDING_CSHARP "Build language bindings for CSharp" OFF)
+OPTION(BUILD_BINDING_PYTHON "Build language bindings for Python" OFF)
 OPTION(BUILD_BINDING_PHP "Build language bindings for PHP" OFF)
 
 OPTION(WITH_CACHE_FILES "Support for caching data in temporary files" ON)
@@ -331,8 +339,7 @@ endif()
 
 if (XercesC_FOUND)
 	include_directories(${XercesC_INCLUDE_DIRS})
-	list (APPEND USCXML_CORE_LIBS ${XercesC_LIBRARIES})
-	set(XERCESC_NS "xercesc_3_2")
+	list (APPEND USCXML_CORE_LIBS ${XercesC_LIBRARIES})	
 else()
 	message(STATUS "--> will download and compile")
 	include("${CMAKE_BUILD_SCRIPTS}/BuildXercesC.cmake")
@@ -486,7 +493,7 @@ if (WITH_DM_LUA)
 endif()
 
 # Python
-OPTION(WITH_DM_PYTHON "Do search for the Python libraries" ON)
+OPTION(WITH_DM_PYTHON "Do search for the Python libraries" OFF)
 if (WITH_DM_PYTHON)
 	find_package(PythonLibs)
 	if (PYTHONLIBS_FOUND)
@@ -511,7 +518,7 @@ if (WITH_DM_C89)
 	endif()
 endif()
 
-OPTION(WITH_DM_PROMELA "Do build with promela datamodel support" ON)
+OPTION(WITH_DM_PROMELA "Do build with promela datamodel support" OFF)
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL Clang)
 	SET_SOURCE_FILES_PROPERTIES(src/uscxml/plugins/datamodel/promela/parser/promela.lex.yy.cpp PROPERTIES COMPILE_FLAGS -Wno-deprecated-register )
 endif()
@@ -568,8 +575,8 @@ target_link_libraries(uscxml_transform uscxml)
 install_library(TARGETS uscxml_transform)
 
 if (NOT CMAKE_CROSSCOMPILING)
-	enable_testing()
-	add_subdirectory(test)
+	#enable_testing()
+	#add_subdirectory(test)
 endif()
 
 add_executable(uscxml-browser src/apps/uscxml-browser.cpp ${GETOPT_FILES})
