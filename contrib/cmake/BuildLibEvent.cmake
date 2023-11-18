@@ -18,20 +18,20 @@ if (MSVC)
 		URL https://github.com/libevent/libevent/releases/download/release-2.1.8-stable/libevent-2.1.8-stable.tar.gz
 		URL_MD5 f3eeaed018542963b7d2416ef1135ecc
 		BUILD_IN_SOURCE 1
-		PREFIX ${CMAKE_BINARY_DIR}/deps/libevent
+		PREFIX ${CMAKE_BINARY_DIR}/_deps/libevent
 		CONFIGURE_COMMAND ""
 		PATCH_COMMAND
 			${CMAKE_COMMAND} -E copy "${PROJECT_SOURCE_DIR}/contrib/patches/libevent/Makefile.nmake" <SOURCE_DIR>/Makefile.nmake
 
 		BUILD_COMMAND nmake ${OPENSSL_ROOT_DIR} -f Makefile.nmake
 		INSTALL_COMMAND
-			${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/deps/libevent/lib && 
-			${CMAKE_COMMAND} -E copy libevent.lib ${CMAKE_BINARY_DIR}/deps/libevent/lib/ && 
-			${CMAKE_COMMAND} -E copy libevent_core.lib ${CMAKE_BINARY_DIR}/deps/libevent/lib/ && 
-			${CMAKE_COMMAND} -E copy libevent_extras.lib ${CMAKE_BINARY_DIR}/deps/libevent/lib/ && 
-			${CMAKE_COMMAND} -E copy ${COPY_LIBEVENT_SSL} ${CMAKE_BINARY_DIR}/deps/libevent/lib/ && 
-			${CMAKE_COMMAND} -E copy_directory include ${CMAKE_BINARY_DIR}/deps/libevent/include &&
-			${CMAKE_COMMAND} -E copy Win32-Code/nmake/event2/event-config.h ${CMAKE_BINARY_DIR}/deps/libevent/include/event2/
+			${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/_deps/libevent/lib && 
+			${CMAKE_COMMAND} -E copy libevent.lib ${CMAKE_BINARY_DIR}/_deps/libevent/lib/ && 
+			${CMAKE_COMMAND} -E copy libevent_core.lib ${CMAKE_BINARY_DIR}/_deps/libevent/lib/ && 
+			${CMAKE_COMMAND} -E copy libevent_extras.lib ${CMAKE_BINARY_DIR}/_deps/libevent/lib/ && 
+			${CMAKE_COMMAND} -E copy ${COPY_LIBEVENT_SSL} ${CMAKE_BINARY_DIR}/_deps/libevent/lib/ && 
+			${CMAKE_COMMAND} -E copy_directory include ${CMAKE_BINARY_DIR}/_deps/libevent/include &&
+			${CMAKE_COMMAND} -E copy Win32-Code/nmake/event2/event-config.h ${CMAKE_BINARY_DIR}/_deps/libevent/include/event2/
 	)
 else ()
 	if (UNIX)
@@ -42,7 +42,7 @@ else ()
 		URL https://github.com/libevent/libevent/releases/download/release-2.1.8-stable/libevent-2.1.8-stable.tar.gz
 		URL_MD5 f3eeaed018542963b7d2416ef1135ecc
 		BUILD_IN_SOURCE 0
-		PREFIX ${CMAKE_BINARY_DIR}/deps/libevent
+		PREFIX ${CMAKE_BINARY_DIR}/_deps/libevent
 		PATCH_COMMAND
 			${CMAKE_COMMAND} -E copy "${PROJECT_SOURCE_DIR}/contrib/patches/libevent/sierra.kqueue.c" <SOURCE_DIR>/kqueue.c
 		CONFIGURE_COMMAND
@@ -51,26 +51,26 @@ else ()
 	
 endif()
 
-set(LIBEVENT_INCLUDE_DIR ${CMAKE_BINARY_DIR}/deps/libevent/include)
+set(LIBEVENT_INCLUDE_DIR ${CMAKE_BINARY_DIR}/_deps/libevent/include)
 
 if (APPLE)
-	set(LIBEVENT_LIBRARIES ${CMAKE_BINARY_DIR}/deps/libevent/lib/libevent_core.a)
-	list (APPEND LIBEVENT_LIBRARIES ${CMAKE_BINARY_DIR}/deps/libevent/lib/libevent_extra.a)
-	list (APPEND LIBEVENT_LIBRARIES ${CMAKE_BINARY_DIR}/deps/libevent/lib/libevent_pthreads.a)
+	set(LIBEVENT_LIBRARIES ${CMAKE_BINARY_DIR}/_deps/libevent/lib/libevent_core.a)
+	list (APPEND LIBEVENT_LIBRARIES ${CMAKE_BINARY_DIR}/_deps/libevent/lib/libevent_extra.a)
+	list (APPEND LIBEVENT_LIBRARIES ${CMAKE_BINARY_DIR}/_deps/libevent/lib/libevent_pthreads.a)
 	if (OPENSSL_FOUND)
-		list (APPEND LIBEVENT_LIBRARIES ${CMAKE_BINARY_DIR}/deps/libevent/lib/libevent_openssl.a)
+		list (APPEND LIBEVENT_LIBRARIES ${CMAKE_BINARY_DIR}/_deps/libevent/lib/libevent_openssl.a)
 	endif()
 elseif (UNIX)
-	set(LIBEVENT_LIBRARIES ${CMAKE_BINARY_DIR}/deps/libevent/lib/libevent_core.a)
-	list (APPEND LIBEVENT_LIBRARIES ${CMAKE_BINARY_DIR}/deps/libevent/lib/libevent_extra.a)
-	list (APPEND LIBEVENT_LIBRARIES ${CMAKE_BINARY_DIR}/deps/libevent/lib/libevent_pthreads.a)
+	set(LIBEVENT_LIBRARIES ${CMAKE_BINARY_DIR}/_deps/libevent/lib/libevent_core.a)
+	list (APPEND LIBEVENT_LIBRARIES ${CMAKE_BINARY_DIR}/_deps/libevent/lib/libevent_extra.a)
+	list (APPEND LIBEVENT_LIBRARIES ${CMAKE_BINARY_DIR}/_deps/libevent/lib/libevent_pthreads.a)
 	if (OPENSSL_FOUND)
-		list (APPEND LIBEVENT_LIBRARIES ${CMAKE_BINARY_DIR}/deps/libevent/lib/libevent_openssl.a)
+		list (APPEND LIBEVENT_LIBRARIES ${CMAKE_BINARY_DIR}/_deps/libevent/lib/libevent_openssl.a)
 	endif()
 elseif(WIN32)
-	set(LIBEVENT_LIBRARIES ${CMAKE_BINARY_DIR}/deps/libevent/lib/libevent.lib)
+	set(LIBEVENT_LIBRARIES ${CMAKE_BINARY_DIR}/_deps/libevent/lib/libevent.lib)
 	if (OPENSSL_FOUND)
-		list (APPEND LIBEVENT_LIBRARIES ${CMAKE_BINARY_DIR}/deps/libevent/lib/libevent_openssl.lib)
+		list (APPEND LIBEVENT_LIBRARIES ${CMAKE_BINARY_DIR}/_deps/libevent/lib/libevent_openssl.lib)
 	endif()
 
 else()

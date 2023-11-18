@@ -35,17 +35,17 @@ if (MSVC)
 		URL https://curl.haxx.se/download/curl-7.48.0.tar.gz
 		URL_MD5 b2cac71029d28cb989150bac72aafab5
 		BUILD_IN_SOURCE 1
-		PREFIX ${CMAKE_BINARY_DIR}/deps/libcurl
+		PREFIX ${CMAKE_BINARY_DIR}/_deps/libcurl
 		CONFIGURE_COMMAND ""
 		BUILD_COMMAND cd winbuild && nmake /f Makefile.vc mode=static MACHINE=${MACHINE_ARCH} VC=${VC_VERSION}
-		INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory builds/libcurl-vc${VC_VERSION}-${MACHINE_ARCH}-release-static-ipv6-sspi-winssl ${CMAKE_BINARY_DIR}/deps/libcurl/
+		INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory builds/libcurl-vc${VC_VERSION}-${MACHINE_ARCH}-release-static-ipv6-sspi-winssl ${CMAKE_BINARY_DIR}/_deps/libcurl/
 	)
 else()
 	externalproject_add(libcurl
 		URL https://curl.haxx.se/download/curl-7.48.0.tar.gz
 		URL_MD5 b2cac71029d28cb989150bac72aafab5
 		BUILD_IN_SOURCE 0
-		PREFIX ${CMAKE_BINARY_DIR}/deps/libcurl
+		PREFIX ${CMAKE_BINARY_DIR}/_deps/libcurl
 		CONFIGURE_COMMAND 
 			"<SOURCE_DIR>/configure" 
 			"--without-ssl"
@@ -54,14 +54,14 @@ else()
 	)
 endif()
 
-set(LIBCURL_INCLUDE_DIR ${CMAKE_BINARY_DIR}/deps/libcurl/include)
+set(LIBCURL_INCLUDE_DIR ${CMAKE_BINARY_DIR}/_deps/libcurl/include)
 
 if (APPLE)
-	set(LIBCURL_LIBRARY ${CMAKE_BINARY_DIR}/deps/libcurl/lib/libcurl.a)
+	set(LIBCURL_LIBRARY ${CMAKE_BINARY_DIR}/_deps/libcurl/lib/libcurl.a)
 elseif(UNIX)
-	set(LIBCURL_LIBRARY ${CMAKE_BINARY_DIR}/deps/libcurl/lib/libcurl.a)
+	set(LIBCURL_LIBRARY ${CMAKE_BINARY_DIR}/_deps/libcurl/lib/libcurl.a)
 elseif(WIN32)
-	set(LIBCURL_LIBRARY ${CMAKE_BINARY_DIR}/deps/libcurl/lib/libcurl_a.lib)
+	set(LIBCURL_LIBRARY ${CMAKE_BINARY_DIR}/_deps/libcurl/lib/libcurl_a.lib)
 else()
 	message(FATAL_ERROR "Unknown platform!")
 endif()

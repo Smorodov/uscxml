@@ -317,7 +317,7 @@ int main(int argc, char** argv) {
 				outStream.close();
 			}
 		}
-
+		
 		if (outType == "pml") {
 			transformer = ChartToPromela::transform(interpreter);
 			transformer.setExtensions(extensions);
@@ -332,6 +332,7 @@ int main(int argc, char** argv) {
 				outStream.close();
 			}
 		}
+		
 
 //		if (outType == "tex") {
 //			if (outputFile.size() == 0 || outputFile == "-") {

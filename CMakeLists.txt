@@ -9,17 +9,19 @@ ELSE()
    SET(CMAKE_BUILD_TYPE Release CACHE STRING ${BUILD_TYPE_HELP})
 ENDIF()
 
+
 # swig_add_module complains quite verbosly on newer cmake versions
-SET(CMAKE_WARN_DEPRECATED OFF)
+SET(CMAKE_WARN_DEPRECATED OFF  CACHE BOOL "" FORCE)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 #set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-set(BUILD_SHARED_LIBS OFF)
+set(BUILD_SHARED_LIBS OFF  CACHE BOOL "" FORCE)
 
 # --------------------------------------
 # --------------------------------------
 include(FetchContent)
 FetchContent_Declare(
 XercesC
+FETCHCONTENT_BASE_DIR ${CMAKE_BINARY_DIR}/deps
 GIT_REPOSITORY https://github.com/smorodov/xerces-c
 GIT_TAG       master
 OVERRIDE_FIND_PACKAGE
@@ -31,18 +33,8 @@ set(XercesC_LIBRARIES debug xerces-c_4D optimized xerces-c_4)
 # --------------------------------------
 add_definitions(-DXERCESC_NS=${XERCESC_NS})
 # --------------
-set(EVENT__DISABLE_TESTS ON)
-set(EVENT__DISABLE_SAMPLES ON)
-FetchContent_Declare(
-libevent
-GIT_REPOSITORY https://github.com/libevent/libevent
-GIT_TAG       master
-OVERRIDE_FIND_PACKAGE
-)
-FetchContent_MakeAvailable(libevent)
 
 PROJECT(uSCXML)
-# set(BUILD_SHARED_LIBS ON)
 
 include_directories(${CMAKE_BINARY_DIR})
 
@@ -50,13 +42,6 @@ set(XercesC_INCLUDE_DIRS
 ${xercesc_SOURCE_DIR}/src
 ${xercesc_BINARY_DIR}/src
 )
-
-set(libevent_INCLUDE_DIRS 
-${libevent_SOURCE_DIR}/include
-)
-
-
-
 link_directories( 
 	${xercesc_BINARY_DIR}/src/Debug
 	${xercesc_BINARY_DIR}/src/Release
@@ -66,7 +51,8 @@ link_directories(
 #################################################
 # General Setup
 #################################################
-
+set(BUILD_SHARED_LIBS OFF  CACHE BOOL "" FORCE)
+set (WITH_DM_PROMELA ON  CACHE BOOL "" FORCE)
 # where to find more cmake scripts
 list (APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/contrib/cmake")
 set (CMAKE_BUILD_SCRIPTS "${PROJECT_SOURCE_DIR}/contrib/cmake")
@@ -575,8 +561,8 @@ target_link_libraries(uscxml_transform uscxml)
 install_library(TARGETS uscxml_transform)
 
 if (NOT CMAKE_CROSSCOMPILING)
-	#enable_testing()
-	#add_subdirectory(test)
+	enable_testing()
+	add_subdirectory(test)
 endif()
 
 add_executable(uscxml-browser src/apps/uscxml-browser.cpp ${GETOPT_FILES})
