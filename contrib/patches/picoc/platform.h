@@ -143,5 +143,6 @@ extern int ExitBuf[];
 
 # endif
 #endif
-
+#undef true
+#undef false
 #endif /* PLATFORM_H */

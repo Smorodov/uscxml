@@ -20,6 +20,11 @@ file(GLOB PICOC_FILES
 		list (REMOVE_ITEM PICOC_FILES ${PROJECT_SOURCE_DIR}/cstdlib/unistd.c)
 		list (APPEND PICOC_FILES ${PROJECT_SOURCE_DIR}/platform/platform_msvc.c)
 		list (APPEND PICOC_FILES ${PROJECT_SOURCE_DIR}/platform/library_msvc.c)
+		add_definitions(
+		-DWIN32
+		-D_CONSOLE
+		-D_CRT_SECURE_NO_WARNINGS
+		)
 	endif()
 
 add_library(picoc ${PICOC_FILES})
